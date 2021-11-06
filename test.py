@@ -82,14 +82,92 @@ class TestRead(unittest.TestCase):
             file.write("1")
         source.InputData().getinstance().read_from_file("test_read.txt")
         regex = "ab+\n"
-        x = "a\n"
-        k = 1
+        prefix_symbol = "a\n"
+        prefix_len = 1
         self.assertEqual(source.InputData().getinstance().regex, regex)
-        self.assertEqual(source.InputData().getinstance().prefix_symbol, x)
-        self.assertEqual(source.InputData().getinstance().prefix_len, k)
-        from os import remove
-        remove("test_read.txt")
+        self.assertEqual(source.InputData().getinstance().prefix_symbol, prefix_symbol)
+        self.assertEqual(source.InputData().getinstance().prefix_len, prefix_len)
+        from os import system
+        system("rm test_read.txt")
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestFunctions(unittest.TestCase):
+
+    def test_do_plus_1(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('a')
+        right_operand = source.ObjectStack('a')
+        result = source.do_plus(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, True, False])
+        self.assertEqual(result.min_len_prefix, [1, 1, source.inf])
+
+    def test_do_plus_2(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('b')
+        right_operand = source.ObjectStack('c')
+        result = source.do_plus(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, False, False])
+        self.assertEqual(result.min_len_prefix, [1, source.inf, source.inf])
+
+    def test_do_plus_3(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('a')
+        right_operand = source.ObjectStack('b')
+        result = source.do_plus(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, True, False])
+        self.assertEqual(result.min_len_prefix, [1, 1, source.inf])
+
+    def test_do_multiply_1(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('a')
+        right_operand = source.ObjectStack('a')
+        result = source.do_multiply(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, False, True])
+        self.assertEqual(result.min_len_prefix, [2, 2, 2])
+
+    def test_do_multiply_2(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('a')
+        right_operand = source.ObjectStack('b')
+        result = source.do_multiply(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, False, False])
+        self.assertEqual(result.min_len_prefix, [2, 2, source.inf])
+
+    def test_do_multiply_3(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('b')
+        right_operand = source.ObjectStack('a')
+        result = source.do_multiply(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, False, False])
+        self.assertEqual(result.min_len_prefix, [2, source.inf, source.inf])
+
+    def test_do_multiply_4(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        left_operand = source.ObjectStack('b')
+        right_operand = source.ObjectStack('b')
+        result = source.do_multiply(left_operand, right_operand)
+        self.assertEqual(result.can_do_xk, [False, False, False])
+        self.assertEqual(result.min_len_prefix, [2, source.inf, source.inf])
+
+    def test_do_Klini_star_1(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        operand = source.ObjectStack('a')
+        result = source.do_Klini_star(operand)
+        self.assertEqual(result.can_do_xk, [True, True, True])
+        self.assertEqual(result.min_len_prefix, [0, 1, 2])
+
+    def test_do_Klini_star_2(self) -> None:
+        source.InputData.getinstance().prefix_symbol = 'a'
+        source.InputData.getinstance().prefix_len = 2
+        operand = source.ObjectStack('b')
+        result = source.do_Klini_star(operand)
+        self.assertEqual(result.can_do_xk, [True, False, False])
+        self.assertEqual(result.min_len_prefix, [0, source.inf, source.inf])

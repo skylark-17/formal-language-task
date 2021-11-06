@@ -17,6 +17,7 @@ class InputData:
         return InputData.__instance
 
     def read(self):
+        print("Введите в отдельных строках регулярное выражение в обратной польской записи, префиксный символ и длину префикса.")
         self.regex = input()
         self.prefix_symbol = input()
         self.prefix_len = int(input())
